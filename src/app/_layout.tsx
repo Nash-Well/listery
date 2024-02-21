@@ -1,21 +1,20 @@
-import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
+import { useFonts } from 'expo-font';
+import { useRouter } from 'expo-router'; 
 
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { TouchableOpacity} from 'react-native';
 
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-
-export {
-  ErrorBoundary,
-} from 'expo-router';
+import { AntDesign } from '@expo/vector-icons';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
+    'open-sans-light':    require('../../assets/fonts/OpenSans-Light.ttf'),
+    'open-sans-regular':  require('../../assets/fonts/OpenSans-Regular.ttf'),
+    'open-sans-semibold': require('../../assets/fonts/OpenSans-SemiBold.ttf'),
   });
 
   useEffect(() => {
@@ -36,18 +35,38 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const router = useRouter();
+
   return (
     <Stack 
-      screenOptions={{
-        headerShown: false,
-      }} 
       initialRouteName='onboard'>
       <Stack.Screen 
-        name="(tabs)" 
+        name="onboard" 
+        options={{ headerShown: false }}
       />
 
       <Stack.Screen 
-        name="onboard" 
+        name="privacy" 
+        options={{
+          title: '',
+          headerShadowVisible: false,
+
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={ () => router.navigate('/onboard') }>
+              <AntDesign 
+                name="arrowleft" 
+                size={ 24 } 
+                color="black" 
+              />
+            </TouchableOpacity>
+          )
+        }}
+      />
+      
+      <Stack.Screen 
+        name="(tabs)"
+        options={{ headerShown: false }} 
       />
     </Stack>
   );
