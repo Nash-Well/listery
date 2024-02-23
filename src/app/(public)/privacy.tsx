@@ -12,7 +12,7 @@ import {
    AntDesign 
 } from '@expo/vector-icons';
 
-export default function privacy() {
+export default function Privacy() {
    return (
       <View className='flex-1 bg-white'>
          <View className='mt-4 h-1/4 bg-slate-400'>

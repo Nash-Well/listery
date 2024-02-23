@@ -1,4 +1,7 @@
+import { useCallback } from 'react';
 import { useRouter } from 'expo-router';
+import { useOAuth } from "@clerk/clerk-expo";
+import { useWarmUpBrowser } from "@/hooks/useWarmUpBrowser";
 
 import { 
     View, 
@@ -14,8 +17,32 @@ import { AntDesign } from '@expo/vector-icons';
 
 import { IMAGES } from '@/constants';
 
+import * as WebBrowser from "expo-web-browser";
+
+WebBrowser.maybeCompleteAuthSession();
+
 export default function onboard() {
     const router = useRouter();
+
+    useWarmUpBrowser();
+    const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+
+    const handleLogin = useCallback(async () => {
+        try {
+            const { 
+                signIn, 
+                signUp,
+                setActive, 
+                createdSessionId 
+            } = await startOAuthFlow();
+        
+            if (createdSessionId) {
+                setActive?.({ session: createdSessionId });
+            }
+        } catch (err) {
+            console.error("OAuth error", err);
+        }
+    }, []);
 
     return (
         <View className='flex-1 relative'>
@@ -42,6 +69,7 @@ export default function onboard() {
 
                     <TouchableOpacity 
                         activeOpacity={ 0.8 }
+                        onPress={ handleLogin }
                         style={ styles.boxShadow }
                         className='p-4 flex-row space-x-3 rounded-xl items-center justify-center bg-white'>
                         <AntDesign 
