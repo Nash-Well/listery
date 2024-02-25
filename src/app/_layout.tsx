@@ -9,9 +9,18 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import { 
   useAuth,
-  ClerkProvider 
+  useClerk,
+  ClerkProvider, 
 } from '@clerk/clerk-expo';
 import * as SecureStore from 'expo-secure-store';
+
+import { 
+  where, 
+  query, 
+  getDocs, 
+  collection, 
+} from 'firebase/firestore';
+import { FIREBASE_DB } from '@/services/firebase'; 
 
 SplashScreen.preventAutoHideAsync();
 
@@ -61,19 +70,48 @@ export default function RootLayout() {
 
 const InitialLayout = () => {
   const router = useRouter();
+  const { user } = useClerk();
   const { isLoaded, isSignedIn } = useAuth();
 
+  const userByEmail = async (email: string): Promise<boolean> => {
+    try {
+      const doc = await getDocs(
+        query(
+          collection(FIREBASE_DB, 'users'), where('email', '==', email)
+        )
+      ); 
+      return !doc.empty;
+    } catch (error) {
+      return false;
+    }
+  }
+  
   useEffect(() => {
     if (!isLoaded) return;
 
-    router.replace(
-      isSignedIn ? 
-        '/(auth)/register' : 
-        '/onboard'
-    );
+    const navigateTo = async () => {
+      if(isSignedIn) {
+        try {
+          const doc = await userByEmail(user?.primaryEmailAddress?.emailAddress!);
 
+          router.replace(
+            doc ?
+              '/(auth)/(tabs)/' : 
+              '/(auth)/register'
+          );
+
+          return;
+        } catch(err) {
+          console.log(err);
+        }
+      }
+
+      router.replace('/onboard');
+    }
+
+    navigateTo();
     SplashScreen.hideAsync();
-  }, [ isSignedIn ]);
+  }, [ isSignedIn ]); 
 
   return <Slot />;
 };

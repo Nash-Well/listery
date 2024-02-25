@@ -11,8 +11,7 @@ export default function TabOneScreen() {
 
   return (
     <View className='flex-1 justify-center items-center'>
-      <TouchableOpacity onPress={ () => signOut() }
-        className='text-2xl font-semibold'>
+      <TouchableOpacity onPress={ () => signOut() }>
         <Text>Sign out</Text>
       </TouchableOpacity>
     </View>

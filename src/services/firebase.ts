@@ -1,5 +1,11 @@
-import { initializeApp } from "firebase/app";
+import { 
+   getApp, 
+   getApps, 
+   initializeApp
+} from "firebase/app";
+
 import { getStorage } from 'firebase/storage';
+import { getFirestore } from 'firebase/firestore'; 
 
 const firebaseConfig = {
    apiKey:              process.env.EXPO_PUBLIC_API_KEY,
@@ -10,5 +16,12 @@ const firebaseConfig = {
    appId:               process.env.EXPO_PUBLIC_APP_ID
 };
 
-const FIREBASE_APP = initializeApp(firebaseConfig);
+const FIREBASE_APP = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+
+const FIREBASE_DB = getFirestore(FIREBASE_APP);
 const FIREBASE_STORAGE = getStorage(FIREBASE_APP);
+
+export {
+   FIREBASE_DB,
+   FIREBASE_STORAGE
+};

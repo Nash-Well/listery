@@ -3,7 +3,7 @@ import SliderItem from './auth/register/SliderItem';
 import CountryItem from './auth/countries/CountryItem';
 
 // Shared
-import ImagePicker from './shared/imagepicker/ImagePicker';
+import ImageModal from './shared/imagepicker/ImageModal';
 
 export {
    // Auth
@@ -11,5 +11,5 @@ export {
    CountryItem,
 
    // Shared
-   ImagePicker
+   ImageModal
 }

@@ -1,5 +1,8 @@
 import { useUser } from '@clerk/clerk-expo';
-import { useLocalSearchParams } from 'expo-router';
+import { 
+   useRouter, 
+   useLocalSearchParams 
+} from 'expo-router';
 import { 
    useRef, 
    useState, 
@@ -17,7 +20,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { 
    SliderItem,
-   ImagePicker 
+   ImageModal, 
 } from '@/components';
 
 import { IMAGES } from '@/constants';
@@ -29,12 +32,27 @@ import {
 } from '@/types';
 import slides from '../../../slides.json';
 
+import { 
+   FIREBASE_DB, 
+   FIREBASE_STORAGE 
+} from '@/services/firebase';
+import { 
+   addDoc, 
+   collection 
+} from 'firebase/firestore';
+import { 
+   ref, 
+   uploadBytes,
+   getDownloadURL, 
+} from 'firebase/storage';
+
 type SearchParams = { 
    country?:   string;
    showError?: boolean;
 }
 
 export default function Register() {   
+   const router = useRouter();
    const sliderRef = useRef<FlatList>(null);
    const email = useUser().user?.primaryEmailAddress?.emailAddress;
 
@@ -47,9 +65,11 @@ export default function Register() {
    }, [ country ]);
 
    const [ user, setUser ] = useState<User>({
-      nikname: '',
-      country: '',
-      email:   email || '',
+      id:               0,
+      nikname:          '',
+      country:          '',
+      profile_img_uri:  '',
+      email:            email || '',
    });
    const [ disabled, setDisabled ] = useState(true);
    const [ currentIndex, setCurrentIndex ] = useState(0);
@@ -57,14 +77,29 @@ export default function Register() {
    const [ upload, setUpload ] = useState(false);
    const handleUpload = () => setUpload(!upload);
 
-   const handleNextPress = () => {
+   const handleNextPress = async () => {
       let updatedIndex = currentIndex + 1;
+      
       if (updatedIndex >= slides.length) {
-         updatedIndex = 0;
+         try {
+            const uri = await uploadToStorage();
+   
+            const newUser = { 
+               ...user, 
+               profile_img_uri: uri || '',
+               id: Math.floor(Math.random() * 1000000) + 1,
+            };
+            await addDoc(collection(FIREBASE_DB, "users"), newUser);
+            
+            router.navigate('/(auth)/(tabs)/');
+            return;
+         } catch (err) {
+            console.error("Error registering user:", err);
+         }
       }
-
+   
+      setDisabled(true);
       setCurrentIndex(updatedIndex);
-      setDisabled(slides[updatedIndex].required);
       sliderRef.current?.scrollToIndex({ index: updatedIndex });
    };
 
@@ -79,6 +114,42 @@ export default function Register() {
          })
       );
    };
+
+   // TODO: move to new section utils
+   const uploadToStorage = async () => {
+      try {
+         const blob = await new Promise<Blob>((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+               resolve(xhr.response);
+            }
+            xhr.onerror = (e: ProgressEvent<EventTarget>) => {
+               console.log(e);
+               reject(new TypeError("Network request failed"));
+            }
+            xhr.responseType = "blob";
+            xhr.open("GET", user.profile_img_uri, true);
+            xhr.send(null);
+         });
+   
+         const storageRef = ref(FIREBASE_STORAGE, `${user.nikname}/${Date.now()}`);
+         await uploadBytes(storageRef, blob);
+   
+         return await getDownloadURL(storageRef); 
+      } catch (err) {
+         console.log("Error registering user:", err); // FIXME
+         throw err;
+      }
+   }
+   const handleImageUpload = (uri: string) => {
+      setUser(
+         oldUser => ({ 
+            ...oldUser, 
+            profile_img_uri: uri 
+         })
+      );
+      setDisabled(false);
+   }
 
    return (
       <View className='flex-1 relative'>
@@ -119,9 +190,10 @@ export default function Register() {
             </TouchableOpacity>
          </SafeAreaView>
 
-         <ImagePicker
+         <ImageModal
             visible={ upload }
             onHide={ handleUpload }
+            uploadImage={ (uri: string) => handleImageUpload(uri) }
          />
       </View>
    )

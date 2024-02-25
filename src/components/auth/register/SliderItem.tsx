@@ -5,6 +5,7 @@ import { FC } from "react";
 import {
    Text,
    View,
+   Image,
    TextInput,
    Dimensions,
    TouchableOpacity,
@@ -93,11 +94,19 @@ const SliderItem: FC<Props> = ({
                      <TouchableOpacity 
                         onPress={ handleUpload }
                         className=' top-[15%] w-56 h-56 border-2 border-dashed border-orange-400 rounded-full items-center justify-center'>
-                        <AntDesign
-                           size={ 48 }
-                           name='camera'
-                           color='orange'
-                        />
+                        {
+                           user.profile_img_uri ?
+                              <Image
+                                 resizeMode='cover'
+                                 className='w-52 h-52 rounded-full'
+                                 source={{ uri: user.profile_img_uri }}
+                              /> :
+                           <AntDesign
+                              size={ 48 }
+                              name='camera'
+                              color='orange'
+                           />
+                        }
                      </TouchableOpacity>
                   </View>
                )
