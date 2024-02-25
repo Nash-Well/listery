@@ -7,6 +7,7 @@ module.exports = {
         'sans-l':  'open-sans-light',
         'sans-r':  'open-sans-regular',
         'sans-sm': 'open-sans-semibold',
+        'sans-b':  'open-sans-bold',
       },
       colors: {
         'black-rgba': 'rgba(0,0,0,0.7)'

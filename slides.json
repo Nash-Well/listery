@@ -1,0 +1,26 @@
+[
+   {
+      "title": "Вигадайте \nсобі нікнейм",
+      "description": "Ви завжди зможете змінити його пізніше",
+      "required": true,
+      "icon": "user",
+      "error_title": "Цей нікнейм вже занято!",
+      "placeholder": "Нікнейм",
+      "field_name": "nikname"
+   },
+   {
+      "title": "Оберіть країну",
+      "description": "Для кращих пропозицій в вашому регіоні",
+      "required": true,
+      "icon": "home",
+      "error_title": "Оберіть країну!",
+      "placeholder": "Країна",
+      "field_name": "country"
+   },
+   {
+      "title": "Додайте фото профілю",
+      "description": "Щоб друзі упізнали вас!",
+      "required": false,
+      "icon": "camera"
+   }
+]

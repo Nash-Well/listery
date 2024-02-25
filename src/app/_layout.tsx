@@ -39,6 +39,7 @@ export default function RootLayout() {
     'open-sans-light':    require('../../assets/fonts/OpenSans-Light.ttf'),
     'open-sans-regular':  require('../../assets/fonts/OpenSans-Regular.ttf'),
     'open-sans-semibold': require('../../assets/fonts/OpenSans-SemiBold.ttf'),
+    'open-sans-bold':     require('../../assets/fonts/OpenSans-Bold.ttf'),
   });
 
   useEffect(() => {
@@ -67,7 +68,7 @@ const InitialLayout = () => {
 
     router.replace(
       isSignedIn ? 
-        '/(auth)/(tabs)/' : 
+        '/(auth)/register' : 
         '/onboard'
     );
 
