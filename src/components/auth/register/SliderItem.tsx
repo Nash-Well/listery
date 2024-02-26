@@ -23,7 +23,7 @@ type Props = {
    item:             Slide;
    error?:           boolean;
    handleUpload:     () => void;
-   hanldeTextChange: (t: string) => void;
+   handleTextChange: (t: string) => void;
 };
 
 const SliderItem: FC<Props> = ({ 
@@ -31,7 +31,7 @@ const SliderItem: FC<Props> = ({
    item, 
    error,
    handleUpload, 
-   hanldeTextChange 
+   handleTextChange 
 }) => {
    const router = useRouter();
    const { width } = Dimensions.get('window');
@@ -76,7 +76,7 @@ const SliderItem: FC<Props> = ({
                            autoCapitalize='none'
                            autoCorrect={ false }
                            placeholder={ item.placeholder }
-                           onChangeText={ hanldeTextChange }
+                           onChangeText={ handleTextChange }
                            value={ (user as any)[`${ item.field_name }`] }
                            className=' flex-1 text-2xl text-gray-600 font-sans-sm'
                            onPressIn={ item.field_name === 'country' ? () => router.navigate("/countries") : () => {} }

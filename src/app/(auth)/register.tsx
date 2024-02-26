@@ -103,7 +103,7 @@ export default function Register() {
       sliderRef.current?.scrollToIndex({ index: updatedIndex });
    };
 
-   const hanldeTextChange = (text: string) => {
+   const handleTextChange = (text: string) => {
       setDisabled(!(text.length > 4));
       const slide = slides[currentIndex];
 
@@ -174,7 +174,7 @@ export default function Register() {
                      user={ user }
                      item={ item as Slide }
                      handleUpload={ handleUpload }
-                     hanldeTextChange={ hanldeTextChange }
+                     handleTextChange={ handleTextChange }
                   /> 
                }
             />

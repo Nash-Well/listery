@@ -23,7 +23,7 @@ import {
    FetchCountries 
 } from '@/types/country';
 
-export default function Coutries() {
+export default function Countries() {
    const router = useRouter();
    const [ country, setCountry ] = useState('');
    
