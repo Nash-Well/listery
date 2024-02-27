@@ -24,12 +24,14 @@ type Props = {
    error?:           boolean;
    handleUpload:     () => void;
    handleTextChange: (t: string) => void;
+   handleSkip:       (uri?: string) => void;
 };
 
 const SliderItem: FC<Props> = ({ 
    user, 
    item, 
    error,
+   handleSkip,
    handleUpload, 
    handleTextChange 
 }) => {
@@ -41,7 +43,9 @@ const SliderItem: FC<Props> = ({
          style={{ width }}>
          {
             !item.required &&
-               <TouchableOpacity className='absolute top-5 right-5'>
+               <TouchableOpacity 
+                  onPress={ () => handleSkip() }
+                  className='absolute top-5 right-5'>
                   <Text className='text-xl text-gray-500 font-sans-r'>
                      Пропустити
                   </Text>

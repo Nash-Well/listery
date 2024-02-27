@@ -84,14 +84,7 @@ export default function Register() {
          try {
             const uri = await uploadToStorage();
    
-            const newUser = { 
-               ...user, 
-               profile_img_uri: uri || '',
-               id: Math.floor(Math.random() * 1000000) + 1,
-            };
-            await addDoc(collection(FIREBASE_DB, "users"), newUser);
-            
-            router.navigate('/(auth)/(tabs)/');
+            handleSkip(uri);
             return;
          } catch (err) {
             console.error("Error registering user:", err);
@@ -102,6 +95,21 @@ export default function Register() {
       setCurrentIndex(updatedIndex);
       sliderRef.current?.scrollToIndex({ index: updatedIndex });
    };
+
+   const handleSkip = async(uri?: string) => {
+      try {
+         const docUser = { 
+            ...user, 
+            profile_img_uri: uri || '',
+            id: Math.floor(Math.random() * 1000000) + 1,
+         };
+         await addDoc(collection(FIREBASE_DB, "users"), docUser);
+         
+         router.navigate('/(auth)/(tabs)/');
+      } catch (err) {
+         console.error("Error registering user:", err); // FIXME
+      }
+   }
 
    const handleTextChange = (text: string) => {
       setDisabled(!(text.length > 4));
@@ -141,6 +149,7 @@ export default function Register() {
          throw err;
       }
    }
+
    const handleImageUpload = (uri: string) => {
       setUser(
          oldUser => ({ 
@@ -173,6 +182,7 @@ export default function Register() {
                   <SliderItem
                      user={ user }
                      item={ item as Slide }
+                     handleSkip={ handleSkip }
                      handleUpload={ handleUpload }
                      handleTextChange={ handleTextChange }
                   /> 
