@@ -16,7 +16,7 @@ const ImageButton: FC<Props> = ({ title, border, handleFunc }) => {
       <TouchableOpacity 
          onPress={ handleFunc }
          className={`py-4 items-center ${ border && 'border-b border-b-gray-500' }`}>
-         <Text className=' text-2xl text-blue-600 font-sans-r'>
+         <Text className='text-xl text-blue-600 font-sans-r'>
             { title }
          </Text>
       </TouchableOpacity>
