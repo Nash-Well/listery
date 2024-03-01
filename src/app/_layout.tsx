@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
+import { useLocalUser } from '@/services/store/user';
 
 import { 
   Slot,
@@ -21,6 +22,8 @@ import {
   collection, 
 } from 'firebase/firestore';
 import { FIREBASE_DB } from '@/services/firebase'; 
+
+import { User } from '@/types';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -70,19 +73,21 @@ export default function RootLayout() {
 
 const InitialLayout = () => {
   const router = useRouter();
+  const setLocalUser = useLocalUser(state => state.setUser);
+
   const { user } = useClerk();
   const { isLoaded, isSignedIn } = useAuth();
 
-  const userByEmail = async (email: string): Promise<boolean> => {
+  const userByEmail = async (email: string): Promise<User | null> => {
     try {
       const doc = await getDocs(
         query(
           collection(FIREBASE_DB, 'users'), where('email', '==', email)
         )
       ); 
-      return !doc.empty;
+      return (doc.docs[0].data()) as User || null;
     } catch (error) {
-      return false;
+      return null;
     }
   }
   
@@ -93,7 +98,8 @@ const InitialLayout = () => {
       if(isSignedIn) {
         try {
           const doc = await userByEmail(user?.primaryEmailAddress?.emailAddress!);
-
+          
+          setLocalUser(doc);
           router.replace(
             doc ?
               '/(auth)/(tabs)/' : 

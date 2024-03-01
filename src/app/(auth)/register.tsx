@@ -8,6 +8,7 @@ import {
    useState, 
    useEffect, 
 } from 'react';
+import { useLocalUser } from '@/services/store/user';
 
 import { 
    View, 
@@ -77,6 +78,8 @@ export default function Register() {
    const [ upload, setUpload ] = useState(false);
    const handleUpload = () => setUpload(!upload);
 
+   const setLocalUser = useLocalUser(state => state.setUser);
+
    const handleNextPress = async () => {
       let updatedIndex = currentIndex + 1;
       
@@ -98,13 +101,14 @@ export default function Register() {
 
    const handleSkip = async(uri?: string) => {
       try {
-         const docUser = { 
+         const docUser: User = { 
             ...user, 
             profile_img_uri: uri || '',
             id: Math.floor(Math.random() * 1000000) + 1,
          };
          await addDoc(collection(FIREBASE_DB, "users"), docUser);
          
+         setLocalUser(docUser);
          router.navigate('/(auth)/(tabs)/');
       } catch (err) {
          console.error("Error registering user:", err); // FIXME

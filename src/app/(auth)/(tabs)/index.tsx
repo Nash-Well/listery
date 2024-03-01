@@ -12,12 +12,15 @@ import {
 import { Tabs, PageSlider } from '@/components';
 
 import { IMAGES } from '@/constants';
+import { useLocalUser } from '@/services/store/user';
 
 const { width } = Dimensions.get('window');
 
 export default function Home() {
   const tabsRef = useRef<FlatList>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
+
+  const localUser = useLocalUser(state => state.user);
 
   const handleTabChange = (idx: number) => {
     tabsRef.current?.scrollToOffset({
@@ -36,12 +39,17 @@ export default function Home() {
 
         <View className='flex-1 justify-center'>
           <View className='p-4 space-x-5 flex-row items-center'>
-            <View className='w-20 h-20 rounded-full bg-slate-600' />
+            <Image
+              resizeMode='contain'
+              className='w-20 h-20 rounded-full'
+              source={{ uri: localUser?.profile_img_uri }}
+            />
+
             <View className='flex-1 space-y-1'>
               <Text 
                 numberOfLines={ 2 }
                 className=' text-2xl text-white font-sans-b'>
-                artem
+                { localUser?.nikname }
               </Text>
 
               <Text className=' text-base text-gray-200 font-sans-sm'>
