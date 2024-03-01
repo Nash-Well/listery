@@ -1,16 +1,30 @@
-import { IMAGES } from '@/constants';
+import { useRef } from 'react';
 
 import { 
   Text,
   View,
   Image,
   FlatList,
-  TouchableOpacity,
+  Animated,
+  Dimensions,
 } from 'react-native';
-import { PageSlider } from '@/components';
 
-// TODO: divide into components
+import { Tabs, PageSlider } from '@/components';
+
+import { IMAGES } from '@/constants';
+
+const { width } = Dimensions.get('window');
+
 export default function Home() {
+  const tabsRef = useRef<FlatList>(null);
+  const scrollX = useRef(new Animated.Value(0)).current;
+
+  const handleTabChange = (idx: number) => {
+    tabsRef.current?.scrollToOffset({
+      offset: idx * width
+    })
+  };
+
   return (
     <View className='flex-1 bg-gray-200 border-t-0.5 border-t-white'>
       <View className='h-40'>
@@ -22,7 +36,7 @@ export default function Home() {
 
         <View className='flex-1 justify-center'>
           <View className='p-4 space-x-5 flex-row items-center'>
-            <View className='w-20 h-20 rounded-full bg-slate-600'></View>
+            <View className='w-20 h-20 rounded-full bg-slate-600' />
             <View className='flex-1 space-y-1'>
               <Text 
                 numberOfLines={ 2 }
@@ -38,35 +52,23 @@ export default function Home() {
         </View>
       </View>
 
-      <View className='-top-3 h-16 rounded-t-2xl bg-gray-200'>
-        <View className='flex-1 flex-row items-center justify-around'>
-          <TouchableOpacity 
-            activeOpacity={ 0.5 }
-            className='w-1/2 items-center pb-2'>
-            <Text className='font-sans-sm text-xl'>
-              Списки
-            </Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            activeOpacity={ 0.5 }
-            className='w-1/2 items-center pb-2'>
-            <Text className='font-sans-sm text-xl'>
-              Бажання
-            </Text>
-          </TouchableOpacity>
-
-          <Indicator />
-        </View>
-      </View>
+      <Tabs
+        scrollX={ scrollX }
+        handleTabChange={ handleTabChange }
+      />
 
       <View className='flex-1'>
         <FlatList
           horizontal
           pagingEnabled
+          ref={ tabsRef }
           bounces={ false }
-          scrollEnabled={ true }
+          scrollEnabled={ false }
           showsHorizontalScrollIndicator={ false }
+          onScroll={ Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }], 
+            { useNativeDriver: false }) 
+          }
 
           data={ new Array(2) }
           renderItem={ ({ index }) => <PageSlider index={ index } />}
@@ -74,13 +76,4 @@ export default function Home() {
       </View>
     </View>
   );
-}
-
-// TODO: implement
-const Indicator = () => {
-  return (
-    <View
-      className='absolute -bottom-[-10] h-[2] w-48 bg-black'
-    />
-  )
 }
