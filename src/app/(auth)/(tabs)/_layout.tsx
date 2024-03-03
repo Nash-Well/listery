@@ -3,14 +3,17 @@ import { Tabs } from 'expo-router';
 import { 
   View,
   Image,
-  StyleSheet 
+  StyleSheet,
 } from 'react-native';
+
 import AddWish from './add_wish';
 
-import { COLORS, IMAGES } from '@/constants';
+import { 
+  COLORS, 
+  IMAGES 
+} from '@/constants';
 
 import { 
-  Entypo,
   Feather,
   AntDesign 
 } from '@expo/vector-icons';
@@ -35,26 +38,6 @@ export default function TabLayout() {
               source={ IMAGES.ProfileBackground }
               className='w-full h-full opacity-90'
             />
-          ),
-
-          headerLeft: () => (
-            <View className='ml-5'>
-              <Entypo 
-                name="list" 
-                size={28} 
-                color="white" 
-              />
-            </View>
-          ),
-
-          headerRight: () => (
-            <View className='mr-5'>
-              <Entypo 
-                name="share" 
-                size={28} 
-                color="white" 
-              />
-            </View>
           ),
 
           tabBarIcon: ({ size, color }) => (

@@ -31,7 +31,7 @@ import {
    User,
    Slide,
 } from '@/types';
-import slides from '../../../slides.json';
+import slides from '@/configs/slides.json';
 
 import { 
    FIREBASE_DB, 

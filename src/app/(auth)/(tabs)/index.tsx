@@ -1,4 +1,6 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
+import { useNavigation } from 'expo-router';
+import { useLocalUser } from '@/services/store/user';
 
 import { 
   Text,
@@ -7,18 +9,28 @@ import {
   FlatList,
   Animated,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
-import { Tabs, PageSlider } from '@/components';
+import { 
+  Tabs, 
+  PageSlider, 
+  BottomSheet 
+} from '@/components';
 
 import { IMAGES } from '@/constants';
-import { useLocalUser } from '@/services/store/user';
+import { Entypo } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 
 export default function Home() {
+  const navigation = useNavigation();
+
   const tabsRef = useRef<FlatList>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
+
+  const sheetRef = useRef<BottomSheetModal>(null);
 
   const localUser = useLocalUser(state => state.user);
 
@@ -27,6 +39,33 @@ export default function Home() {
       offset: idx * width
     })
   };
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity 
+            className='ml-5'
+            activeOpacity={ 0.6 }
+            onPress={ () => sheetRef.current?.present() }>
+            <Entypo 
+              name="list" 
+              size={ 28 } 
+              color="white" 
+            />
+        </TouchableOpacity>
+      ),
+
+      headerRight: () => (
+        <View className='mr-5'>
+          <Entypo 
+            name="share" 
+            size={ 28 } 
+            color="white" 
+          />
+        </View>
+      )
+    })
+  }, [ navigation ]);
 
   return (
     <View className='flex-1 bg-gray-200 border-t-0.5 border-t-white'>
@@ -82,6 +121,11 @@ export default function Home() {
           renderItem={ ({ index }) => <PageSlider index={ index } />}
         />
       </View>
+
+      <BottomSheet 
+        ref={ sheetRef } 
+        handleModalClose={ () => sheetRef.current?.close() } 
+      />
     </View>
   );
 }

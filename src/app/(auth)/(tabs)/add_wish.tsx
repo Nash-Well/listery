@@ -23,10 +23,10 @@ export default function AddWish({ size }: Props) {
   
   return (
     <View>
-      <View className=' items-center'>
+      <View className='items-center'>
         <TouchableOpacity 
           onPress={ handleModal }
-          className=' top-[4] w-[60] h-[60] z-30 rounded-full border-gray-50 items-center justify-center bg-orange-500'>              
+          className='top-[4] w-[60] h-[60] z-30 rounded-full border-gray-50 items-center justify-center bg-orange-500'>              
           <AntDesign 
             name="plus" 
             size={ size } 
@@ -34,7 +34,7 @@ export default function AddWish({ size }: Props) {
           />
         </TouchableOpacity>
 
-        <View className=' absolute top-[10] -z-10'>
+        <View className='absolute top-[10] -z-10'>
           <Svg
             width={115}
             height={60}

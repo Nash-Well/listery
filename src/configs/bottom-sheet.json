@@ -1,0 +1,32 @@
+[
+   {
+      "title": "Редагувати профіль",
+      "route": "/profile",
+      "icon":  "user|ant"
+   },
+   {
+      "title": "Повідомлення",
+      "route": "/messages",
+      "icon":  "bell|feature"
+   },
+   {
+      "title": "Конфіденційність",
+      "route": "/privacy",
+      "icon":  "Safety|ant"
+   },
+   {
+      "title": "Локалізація",
+      "route": "/locale",
+      "icon":  "earth|ant"
+   },
+   {
+      "title": "Допомога",
+      "route": "/help",
+      "icon":  "help-circle|feature"
+   },
+   {
+      "title": "Вийти",
+      "route": "/exit",
+      "icon":  "sign-out|octicons"
+   }
+]
