@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'expo-router';
 
 import { 
   Text,
@@ -18,13 +19,21 @@ type Props = {
 };
 
 export default function AddWish({ size }: Props) {
+  const router = useRouter();
+
   const [ modal, setModal ] = useState(false);
   const handleModal = () => setModal(oldModal => !oldModal);
+
+  const handleNavigate = (route: string) => {
+    handleModal();
+    router.navigate(route);
+  }
   
   return (
     <View>
       <View className='items-center'>
         <TouchableOpacity 
+          activeOpacity={ 1 }
           onPress={ handleModal }
           className='top-[4] w-[60] h-[60] z-30 rounded-full border-gray-50 items-center justify-center bg-orange-500'>              
           <AntDesign 
@@ -52,7 +61,10 @@ export default function AddWish({ size }: Props) {
         visible={ modal }
         animationType='slide'
         onRequestClose={ handleModal }>
-        <View className='flex-1 bg-black-rgba'>
+        <TouchableOpacity 
+          activeOpacity={ 1 }
+          onPress={ handleModal }
+          className='flex-1 bg-black-rgba'>
           <SafeAreaView className='flex-1'>
             <View className='absolute bottom-10 left-5 right-5 rounded-2xl space-y-3'>
               <View className='rounded-xl bg-gray-300'>
@@ -63,7 +75,7 @@ export default function AddWish({ size }: Props) {
                 />
                 <ImageButton
                   title='Створити список'
-                  handleFunc={ () => {} }
+                  handleFunc={ () => handleNavigate('/add_list') }
                 />
               </View>
 
@@ -76,7 +88,7 @@ export default function AddWish({ size }: Props) {
               </TouchableOpacity>
             </View>
           </SafeAreaView>
-        </View>
+        </TouchableOpacity>
       </Modal>
     </View>
   );

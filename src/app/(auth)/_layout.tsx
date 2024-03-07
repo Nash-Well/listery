@@ -59,6 +59,15 @@ export default function AuthLayout() {
                      title: 'Допомога'
                   }}
                />
+
+               <Stack.Screen name="list" />
+
+               <Stack.Screen name="add_list" 
+                  options={{
+                     headerShown: true,
+                     title: 'Створити список'
+                  }}
+               />
             </Stack>
          </BottomSheetModalProvider>
       </GestureHandlerRootView>

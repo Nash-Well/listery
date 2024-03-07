@@ -22,6 +22,7 @@ import {
   collection, 
 } from 'firebase/firestore';
 import { FIREBASE_DB } from '@/services/firebase'; 
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { User } from '@/types';
 
@@ -46,6 +47,8 @@ const tokenCache = {
   },
 };
 
+const queryClient = new QueryClient();
+
 export default function RootLayout() {
   const [ loaded, error ] = useFonts({
     'open-sans-light':    require('../../assets/fonts/OpenSans-Light.ttf'),
@@ -63,11 +66,13 @@ export default function RootLayout() {
   }
 
   return (
-    <ClerkProvider 
-      tokenCache={ tokenCache }
-      publishableKey={ ClerkPublishKey! }>
-        <InitialLayout />
-    </ClerkProvider>
+    <QueryClientProvider client={ queryClient }>
+      <ClerkProvider 
+        tokenCache={ tokenCache }
+        publishableKey={ ClerkPublishKey! }>
+          <InitialLayout />
+      </ClerkProvider>
+    </QueryClientProvider>
   )
 }
 

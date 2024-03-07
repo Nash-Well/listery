@@ -1,21 +1,29 @@
 import { User } from './user';
 
-// Register
+// (Auth)
+import { Wish } from './wish';
+import { List } from './list';
+
+// (Auth) Register
 import { Slide } from './slide';
 import { Country } from './country';
 
-// Home
+// (Auth) Home
 import { Tab } from './tab';
 import { Measure } from './measure';
 
 export {
    User,
 
-   // Register
+   // (Auth)
+   Wish,
+   List,
+
+   // (Auth) Register
    Slide,
    Country,
    
-   // Home
+   // (Auth) Home
    Tab,
    Measure,
 }

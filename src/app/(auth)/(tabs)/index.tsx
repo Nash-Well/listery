@@ -21,6 +21,7 @@ import {
 
 import { IMAGES } from '@/constants';
 import { Entypo } from '@expo/vector-icons';
+import { Skeleton } from 'moti/skeleton';
 
 const { width } = Dimensions.get('window');
 
@@ -78,11 +79,21 @@ export default function Home() {
 
         <View className='flex-1 justify-center'>
           <View className='p-4 space-x-5 flex-row items-center'>
-            <Image
-              resizeMode='contain'
-              className='w-20 h-20 rounded-full'
-              source={{ uri: localUser?.profile_img_uri }}
-            />
+            <Skeleton
+              width={ 80 }
+              height={ 80 }
+              radius='round'
+              colorMode='light'>
+              {
+                !!localUser?.profile_img_uri ?
+                  <Image
+                    resizeMode='contain'
+                    className='w-20 h-20 rounded-full'
+                    source={{ uri: localUser?.profile_img_uri }}
+                  /> :
+                null
+              }
+            </Skeleton>
 
             <View className='flex-1 space-y-1'>
               <Text 
