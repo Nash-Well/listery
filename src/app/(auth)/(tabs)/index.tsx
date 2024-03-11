@@ -83,7 +83,12 @@ export default function Home() {
               width={ 80 }
               height={ 80 }
               radius='round'
-              colorMode='light'>
+              colorMode='light'
+              
+              transition={{
+                type: 'timing',
+                duration: 1500,
+              }}>
               {
                 !!localUser?.profile_img_uri ?
                   <Image

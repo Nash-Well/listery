@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useQueryClient } from 'react-query';
 import { useLocalUser } from '@/services/store/user';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 import { 
    View, 
@@ -24,7 +24,15 @@ import {
 import { List } from '@/types';
 
 import { FIREBASE_DB } from '@/services/firebase';
-import { addDoc, collection } from 'firebase/firestore';
+import { 
+   doc, 
+   where, 
+   query,
+   addDoc, 
+   getDocs,
+   updateDoc,
+   collection,
+} from 'firebase/firestore';
 
 export default function AddList() {
    const router = useRouter();
@@ -43,7 +51,7 @@ export default function AddList() {
    const handleDateModal = () => setDateModal(oldModal => !oldModal);
 
    const [ list, setList ] = useState<List>({
-      id:      0,
+      id:      params?.id      || 0,
       emoji:   params?.emoji   || '⭐',
       title:   params?.title   ||  '',
       date:    params?.date    || '',
@@ -75,21 +83,47 @@ export default function AddList() {
 
    const handleCreateList = async () => {
       try {
-         const updatedList: List = {
-            ...list,
-            email:   localUser?.email!,
-            id:      Math.floor(Math.random() * 10000000) + 1
-         };
+         if (Object.keys(params).length > 0) {  
+            const resp = await getDocs(
+               query(
+                     collection(FIREBASE_DB, "list"), 
+                     where("email", "==", localUser?.email)
+               )
+            );
+            
+            let docID = '';
+            resp.docs.forEach(doc => {
+               if (doc.data() && doc.data().id == list.id) {
+                  docID = doc.id;
+                  return;
+               }
+            });
 
-         await addDoc(collection(FIREBASE_DB, "list"), updatedList);
-         client.setQueryData("lists", (oldLists: List[] | undefined) => { return [...oldLists!, updatedList ] });
+            await updateDoc(doc(FIREBASE_DB, "list", docID), { ...list })
 
+            client.setQueryData(
+               "lists", 
+               (oldList: List[] | undefined) => 
+                  oldList ? oldList.map(ol => 
+                     (ol.id === list.id ? list : ol)) : []
+            );
+         } else {
+            const updatedList: List = { 
+               ...list,
+               email: localUser?.email || '',
+               id: Math.floor(Math.random() * 10000000) + 1,
+            }; 
+   
+            await addDoc(collection(FIREBASE_DB, "list"), updatedList);
+            client.setQueryData("lists", (oldLists: List[] | undefined) => { return [...oldLists!, updatedList ] });
+         }
+         
          router.navigate('/(auth)/(tabs)/');
       } catch(err) {
-         throw err; // FIXME
+         console.error("Error occurred:", err);
       }
    }
-
+   
    return (
       <View className='flex-1 p-5 bg-white'>
          <View className='flex-1 space-y-5'>
@@ -118,9 +152,9 @@ export default function AddList() {
                   autoCapitalize='none'
                   autoCorrect={ false }
                   placeholder='Додайте заголовок'
-                  placeholderTextColor={ COLORS.panton }
-                  className='text-xl text-black font-sans-r'
                   onChangeText={ handleTextChange }
+                  placeholderTextColor={ COLORS.panton }
+                  className='flex-1 text-xl text-black font-sans-r'
                />
             </View>
 
@@ -136,7 +170,7 @@ export default function AddList() {
                   <Text className='text-xl text-gray-400 font-sans-r'>
                      {
                         list.date ?
-                           list.date :
+                        new Date(list.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) :
                         "Додати дату події"
                      }
                   </Text>
@@ -167,7 +201,7 @@ export default function AddList() {
             onPress={ handleCreateList }
             className={ `absolute bottom-8 right-5 left-5 py-5 rounded-lg items-center justify-center bg-${ disabled ? 'gray' : 'orange' }-400` }>
             <Text className='text-xl text-white font-sans-b'>
-               Створити список
+               { Object.keys(params).length > 0 ? 'Редагувати' : 'Створити' } список
             </Text>
          </TouchableOpacity>
 
