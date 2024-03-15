@@ -1,12 +1,14 @@
 interface Wish {
+   id:            number;
    name:          string;
-   list_name:     string;
+   list_id:       number;
    link:          string;
-   imgs:          string[3];
+   imgs:          Array<string>;
    description:   string;
    price:         number;
    currency:      string;
    hide:          boolean;
+   email:         string;
 };
 
 export { Wish };

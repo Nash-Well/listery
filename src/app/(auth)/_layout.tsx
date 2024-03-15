@@ -62,6 +62,8 @@ export default function AuthLayout() {
 
                <Stack.Screen name="list" />
 
+               <Stack.Screen name="add_item" />
+
                <Stack.Screen name="add_list" 
                   options={{
                      headerShown: true,

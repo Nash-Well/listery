@@ -18,8 +18,6 @@ type Props = {
 
 const ImageModal: FC<Props> = ({ visible, onHide, uploadImage }) => {
    const handleImageUpload = async () => {
-      onHide();
-      
       try {
          let res = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -29,6 +27,7 @@ const ImageModal: FC<Props> = ({ visible, onHide, uploadImage }) => {
          });
    
          !res.canceled && uploadImage(res.assets[0].uri);
+         onHide();
       } catch(err) {
          console.log(err); // FIXME
       }

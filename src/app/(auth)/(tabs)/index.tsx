@@ -11,6 +11,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import { Skeleton } from 'moti/skeleton';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 import { 
@@ -20,8 +21,8 @@ import {
 } from '@/components';
 
 import { IMAGES } from '@/constants';
+
 import { Entypo } from '@expo/vector-icons';
-import { Skeleton } from 'moti/skeleton';
 
 const { width } = Dimensions.get('window');
 

@@ -71,7 +71,7 @@ export default function AddWish({ size }: Props) {
                 <ImageButton
                   border
                   title='Створити бажання'
-                  handleFunc={ () => {} }
+                  handleFunc={ () => handleNavigate('/add_item') }
                 />
                 <ImageButton
                   title='Створити список'

@@ -33,19 +33,12 @@ import {
 } from '@/types';
 import slides from '@/configs/slides.json';
 
-import { 
-   FIREBASE_DB, 
-   FIREBASE_STORAGE 
-} from '@/services/firebase';
+import { FIREBASE_DB } from '@/services/firebase';
 import { 
    addDoc, 
    collection 
 } from 'firebase/firestore';
-import { 
-   ref, 
-   uploadBytes,
-   getDownloadURL, 
-} from 'firebase/storage';
+import { UploadToStorage } from '@/services/utils/image';
 
 type SearchParams = { 
    country?:   string;
@@ -85,7 +78,7 @@ export default function Register() {
       
       if (updatedIndex >= slides.length) {
          try {
-            const uri = await uploadToStorage();
+            const uri = await UploadToStorage(user.profile_img_uri, `${user.nikname}/profile_img`);
    
             handleSkip(uri);
             return;
@@ -126,33 +119,6 @@ export default function Register() {
          })
       );
    };
-
-   // TODO: move to new section utils
-   const uploadToStorage = async () => {
-      try {
-         const blob = await new Promise<Blob>((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.onload = () => {
-               resolve(xhr.response);
-            }
-            xhr.onerror = (e: ProgressEvent<EventTarget>) => {
-               console.log(e);
-               reject(new TypeError("Network request failed"));
-            }
-            xhr.responseType = "blob";
-            xhr.open("GET", user.profile_img_uri, true);
-            xhr.send(null);
-         });
-   
-         const storageRef = ref(FIREBASE_STORAGE, `${user.nikname}/${Date.now()}`);
-         await uploadBytes(storageRef, blob);
-   
-         return await getDownloadURL(storageRef); 
-      } catch (err) {
-         console.log("Error registering user:", err); // FIXME
-         throw err;
-      }
-   }
 
    const handleImageUpload = (uri: string) => {
       setUser(

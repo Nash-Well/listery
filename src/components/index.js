@@ -8,10 +8,14 @@ import Tabs from './auth/home/Tabs';
 import BottomSheet from './auth/home/BottomSheet';
 import ListsTab from './auth/home/ListsTab';
 
+// (Auth) AddItem
+import ListModal from './auth/add_item/ListModal';
+
 // Shared
 import ImageModal from './shared/imagepicker/ImageModal';
 import EmojiModal from './shared/auth/EmojiModal';
 import DateModal from './shared/auth/DateModal';
+import ExpandInput from './shared/auth/ExpandInput';
 
 export {
    // (Auth) Register
@@ -24,8 +28,12 @@ export {
    BottomSheet,
    ListsTab,
 
+   // (Auth) AddItem
+   ListModal,
+
    // Shared
    ImageModal,
    EmojiModal,
    DateModal,
+   ExpandInput,
 }
