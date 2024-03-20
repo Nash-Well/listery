@@ -3,6 +3,8 @@ import { Tabs } from 'expo-router';
 import { 
   View,
   Image,
+  TextInput,
+  Dimensions,
   StyleSheet,
 } from 'react-native';
 
@@ -17,6 +19,8 @@ import {
   Feather,
   AntDesign 
 } from '@expo/vector-icons';
+
+const { width } = Dimensions.get('window');
 
 export default function TabLayout() {
   return (
@@ -67,8 +71,31 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name='search'
+        name="(top)"
         options={{
+          headerShadowVisible: false,
+
+          headerTitle: () => (
+            <View 
+              style={{ width: width * 0.9 }}
+              className='flex-1 rounded-md bg-gray-300'>
+              <View className='flex-1 mx-3 flex-row items-center justify-between space-x-1'>
+                <TextInput
+                  placeholder='Пошук'
+                  placeholderTextColor='gray'
+                  clearButtonMode='while-editing'
+                  className='flex-1 text-base text-gray-700 font-sans-r'
+                />
+
+                <Feather 
+                  name="search" 
+                  size={ 24 } 
+                  color={ COLORS.pumpkin } 
+                />
+              </View>
+            </View>
+          ),
+
           tabBarIcon: ({ size, color }) => (
             <View className='top-3'>
               <Feather 

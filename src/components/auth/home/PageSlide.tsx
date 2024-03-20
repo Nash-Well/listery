@@ -2,12 +2,11 @@ import { FC, JSX } from "react";
 import { useLocalUser } from "@/services/store/user";
 
 import { 
-   Text,
    View, 
    Dimensions,
 } from "react-native";
 import ListsTab from "./ListsTab";
-
+import WishesTab from "./WishesTab";
 
 type Props = {
    index: number;
@@ -19,17 +18,9 @@ const PageSlider: FC<Props> = ({ index }) => {
 
    const handleIndex = (): JSX.Element => {
       switch(index) {
-         case 0: return <ListsTab email={ localUser?.email! } />
-         case 1: {
-            return (
-               <View>
-                  <Text>{ index }</Text>
-               </View>
-            )
-         }
-         default: {
-            return <></>;
-         }
+         case 0: return <ListsTab email={ localUser?.email! } />;
+         case 1: return <WishesTab email={ localUser?.email! } />;
+         default: return <></>;
       }
    };
    

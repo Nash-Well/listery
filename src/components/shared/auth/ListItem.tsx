@@ -23,6 +23,7 @@ import {
    deleteDoc, 
    collection, 
 } from "firebase/firestore";
+import RightAction from "./RightAction";
 
 type Props = {
    item: List;
@@ -33,28 +34,6 @@ const ListItem: FC<Props> = ({ item }) => {
    const client = useQueryClient();
 
    const swipeRef = createRef<Swipeable>();
-   
-   const rightAction = () => (
-      <View className="p-5 flex-row">
-         <TouchableOpacity 
-            activeOpacity={ 0.6 }
-            onPress={ handleEditItem }
-            className="w-32 rounded-l-xl items-center justify-center bg-orange-400">
-            <Text className="text-white text-lg font-sans-sm">
-               Редагувати
-            </Text>
-         </TouchableOpacity>
-
-         <TouchableOpacity 
-            activeOpacity={ 0.6 }
-            onPress={ handleDeleteItem }
-            className="w-32 rounded-r-xl items-center justify-center bg-red-500">
-            <Text className="text-white text-lg font-sans-sm">
-               Видалити
-            </Text>
-         </TouchableOpacity>
-      </View>
-   );
 
    const deleteItem = async () => {
       try {
@@ -103,7 +82,12 @@ const ListItem: FC<Props> = ({ item }) => {
    return (
       <Swipeable
          ref={ swipeRef } 
-         renderRightActions={ rightAction }>
+         renderRightActions={ () => 
+            <RightAction 
+               containerStyle="p-5" 
+               handleDelete={ handleDeleteItem } 
+               handleEdit={ handleEditItem } 
+            /> }>
          <TouchableOpacity 
             activeOpacity={ 1 }
             className="mx-4 my-4 p-5 shadow-md rounded-lg space-y-1 bg-white">

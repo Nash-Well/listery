@@ -16,7 +16,7 @@ type Props = {
    lists:      List[];
    visible:    boolean;
    setVisible: () => void;
-   setList:    (id: number) => void;
+   setList:    (id: number, name: string) => void;
 };
 
 const ListModal: FC<Props> = ({ lists, visible, setList, setVisible }) => {   
@@ -49,7 +49,7 @@ const ListModal: FC<Props> = ({ lists, visible, setList, setVisible }) => {
                      renderItem={ ({ item }) => (
                         <TouchableOpacity 
                            activeOpacity={ 0.6 }
-                           onPress={ () => setList(item.id) }
+                           onPress={ () => setList(item.id, item.title) }
                            className="py-3 border-b-0.5 border-b-gray-400">
                            <Text className="px-5 text-xl font-sans-sm">
                               { item.title }

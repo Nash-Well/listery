@@ -17,7 +17,8 @@ module.exports = {
         'sans-b':  'open-sans-bold',
       },
       colors: {
-        'black-rgba': 'rgba(0,0,0,0.7)'
+        'black-rgba':     'rgba(0,0,0,0.7)',
+        'black-rgba-0.5': 'rgba(0,0,0,0.5)'
       }
     },
   },

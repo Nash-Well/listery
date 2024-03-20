@@ -64,11 +64,20 @@ export default function AuthLayout() {
 
                <Stack.Screen name="add_item" />
 
-               <Stack.Screen name="add_list" 
+               <Stack.Screen 
+                  name="add_list" 
                   options={{
                      headerShown: true,
                      title: 'Створити список'
                   }}
+               />
+
+               <Stack.Screen 
+                  name="wish" 
+                  options={{ 
+                     title: '',
+                     headerShown: true,
+                  }} 
                />
             </Stack>
          </BottomSheetModalProvider>

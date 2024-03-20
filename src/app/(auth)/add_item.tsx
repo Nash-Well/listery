@@ -10,8 +10,10 @@ import {
    Switch,
    FlatList,
    TextInput,
+   StyleSheet,
    TouchableOpacity 
 } from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
 
 import { 
    ListModal, 
@@ -20,6 +22,8 @@ import {
 } from '@/components';
 
 import { COLORS } from '@/constants';
+
+import currencies from '@/configs/currencies.json';
 
 import { 
    Entypo, 
@@ -69,11 +73,12 @@ export default function AddItem() {
       id:            0,
       name:          '',
       list_id:       -1,
+      list_name:     '',
       link:          '',
       imgs:          ['', '', ''],
       description:   '',
       price:         0,
-      currency:      'uan',
+      currency:      '₴',
       hide:          false,
       email:         localUser?.email!,
    });
@@ -91,7 +96,6 @@ export default function AddItem() {
       }));
    };
 
-   const [ disabled, setDisabled ] = useState(false);
    const isAble = () => wish.list_id !== -1 && wish.name !== '';
 
    const [ listModal, setListModal ] = useState(false);
@@ -104,10 +108,11 @@ export default function AddItem() {
       return urlRegex.test(wish.link);
    };
 
-   const setList = (id: number) => {
+   const setList = (id: number, name: string) => {
       setWish(oldWish => ({ 
             ...oldWish, 
-            list_id: id 
+            list_id:    id,
+            list_name:  name,
          })
       );
       handleListModal();
@@ -134,6 +139,8 @@ export default function AddItem() {
          
          await addDoc(collection(FIREBASE_DB, "wishes"), newWish);
          client.setQueryData("wishes", (oldLists: Wish[] | undefined) => { return [...oldLists!, newWish ] });
+      
+         router.navigate('/(auth)/(tabs)/');
       } catch (err) {
           console.log(err); // FIXME
       }
@@ -189,6 +196,7 @@ export default function AddItem() {
                   autoCapitalize='none'
                   autoCorrect={ false }
                   placeholder='Додати посилання'
+                  style={{ lineHeight: 24 }}
                   className='flex-1 text-lg text-gray-800 font-sans-sm'
                   onChangeText={ (text) => updatedWish("link", text) }
                />
@@ -259,18 +267,37 @@ export default function AddItem() {
             </View>
             
             <View className='flex-row items-center space-x-2'>
-               <AntDesign 
-                  name="tago"
-                  size={ 28 } 
-                  color={ COLORS.panton } 
-               />
-               
-               <TextInput
-                  placeholder='0,00'
-                  keyboardType='numeric'
-                  className='text-lg text-gray-800 font-sans-r'
-                  onChangeText={ (text) => updatedWish("price", +text) }
-               />
+               <View className='flex-row items-center space-x-3'>
+                  <AntDesign 
+                     name="tago"
+                     size={ 28 } 
+                     color={ COLORS.panton } 
+                  />
+                  
+                  <TextInput
+                     placeholder='0,00'
+                     keyboardType='numeric'
+                     className='text-lg text-gray-800 font-sans-r'
+                     onChangeText={ (text) => updatedWish("price", +text) }
+                  />
+               </View>
+
+               <View>
+                  <RNPickerSelect
+                     style={ styles }
+                     placeholder={{ 
+                        label: '₴ UAN',
+                        value: '₴', 
+                        color: '#000' 
+                     }}
+                     
+                     items={currencies.map(curr => ({ 
+                        value: curr.symbol,
+                        label: `${curr.symbol} ${curr.code}`
+                     }))}
+                     onValueChange={ (value) => updatedWish<string>("currency", value) }
+                  />
+               </View>
             </View>
 
             {/* TODO: make separate component */}
@@ -295,7 +322,7 @@ export default function AddItem() {
 
          {/* TODO: Make separate component */}
          <TouchableOpacity 
-            disabled={ isAble() }
+            disabled={ !isAble() }
             activeOpacity={ 0.6 }
             onPress={ handleAddWish }
             className={ `absolute bottom-8 right-5 left-5 p-5 rounded-lg items-center bg-${ isAble() ? 'orange' : 'gray' }-400` }>
@@ -319,3 +346,20 @@ export default function AddItem() {
       </View>
    )
 }
+
+const styles = StyleSheet.create({
+   inputIOS: {
+      padding: 5,
+      borderRadius: 5,
+      fontSize: 18,
+      marginTop: 5,
+      fontFamily: 'open-sans-regular'
+   },
+   inputAndroid: {
+      padding: 5,
+      borderRadius: 5,
+      fontSize: 16,
+      marginTop: 4,
+      fontFamily: 'open-sans-regular'
+   }
+})
