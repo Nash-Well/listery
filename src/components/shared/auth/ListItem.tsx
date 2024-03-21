@@ -10,6 +10,10 @@ import {
 } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 
+import RightAction from "./RightAction";
+
+import styles from "@/styles/box_shadow";
+
 import { Feather } from "@expo/vector-icons";
 
 import { List } from "@/types";
@@ -23,7 +27,6 @@ import {
    deleteDoc, 
    collection, 
 } from "firebase/firestore";
-import RightAction from "./RightAction";
 
 type Props = {
    item: List;
@@ -90,7 +93,12 @@ const ListItem: FC<Props> = ({ item }) => {
             /> }>
          <TouchableOpacity 
             activeOpacity={ 1 }
-            className="mx-4 my-4 p-5 shadow-md rounded-lg space-y-1 bg-white">
+            style={ styles.itemShadow }
+            onPress={ () => router.navigate({ 
+               pathname: '/(auth)/list', 
+               params: { id: item.id.toString() } 
+            }) }
+            className="mx-4 my-4 p-5 rounded-lg space-y-1 bg-white">
             <View className="flex-row items-center justify-between">
                <Text className="text-4xl">{ item.emoji }</Text>
 

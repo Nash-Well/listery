@@ -11,6 +11,7 @@ import {
 
 import ListItem from "@/components/shared/auth/ListItem";
 
+import styles from "@/styles/box_shadow";
 import { COLORS } from "@/constants";
 
 import { Entypo } from "@expo/vector-icons";
@@ -54,7 +55,8 @@ const ListsTab: FC<Props> = ({ email }) => {
             ListHeaderComponent={ () => (
                <TouchableOpacity 
                   activeOpacity={ 0.6 }
-                  className="p-5 mb-4 mx-4 shadow-md rounded-lg space-y-1 bg-white">
+                  style={ styles.itemShadow }
+                  className="p-5 mb-4 mx-4 rounded-lg space-y-1 bg-white">
                   <Text className="text-4xl">😍</Text>
 
                   <View className="space-y-2">

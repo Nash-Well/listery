@@ -11,6 +11,7 @@ import {
 import { Swipeable } from "react-native-gesture-handler";
 import RightAction from "./RightAction";
 
+import styles from "@/styles/box_shadow";
 import { IMAGES } from "@/constants";
 
 import { Feather } from "@expo/vector-icons";
@@ -62,8 +63,9 @@ const WishItem: FC<Props> = ({ item }) => {
       }>
          <TouchableOpacity 
             activeOpacity={ 1 }
-            onPress={ () => router.push({ pathname: '/(auth)/wish', params: { id: JSON.stringify(item.id) }  }) }
-            className="mb-5 flex-row items-center mx-5 shadow-lg rounded-lg bg-white">
+            style={ styles.itemShadow }
+            className="mb-5 flex-row items-center mx-5 rounded-lg bg-white"
+            onPress={ () => router.push({ pathname: '/(auth)/wish', params: { id: JSON.stringify(item.id) } }) }>
             <View className="relative">
                <Image
                   resizeMode="cover"

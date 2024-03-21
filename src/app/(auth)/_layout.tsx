@@ -1,6 +1,6 @@
 import { Stack, useRouter } from "expo-router";
 
-import { TouchableOpacity } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -60,7 +60,13 @@ export default function AuthLayout() {
                   }}
                />
 
-               <Stack.Screen name="list" />
+               <Stack.Screen 
+                  name="list" 
+                  options={{
+                     title: '',
+                     headerShown: true,
+                  }}
+               />
 
                <Stack.Screen name="add_item" />
 
