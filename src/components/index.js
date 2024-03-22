@@ -11,6 +11,9 @@ import ListsTab from './auth/home/ListsTab';
 // (Auth) AddItem
 import ListModal from './auth/add_item/ListModal';
 
+// (Auth) Top
+import UserItem from './auth/top/UserItem';
+
 // Shared
 import ImageModal from './shared/imagepicker/ImageModal';
 import EmojiModal from './shared/auth/EmojiModal';
@@ -30,6 +33,9 @@ export {
 
    // (Auth) AddItem
    ListModal,
+
+   // (Auth) Top
+   UserItem,
 
    // Shared
    ImageModal,

@@ -96,8 +96,12 @@ export default function Home() {
                     resizeMode='contain'
                     className='w-20 h-20 rounded-full'
                     source={{ uri: localUser?.profile_img_uri }}
-                  /> :
-                null
+                  /> : 
+                <Image
+                  resizeMode='contain'
+                  className='w-20 h-20 rounded-full'
+                  source={ IMAGES.EmptyImage }
+                />
               }
             </Skeleton>
 

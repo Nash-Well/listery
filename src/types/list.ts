@@ -15,6 +15,7 @@ interface List {
    email:   string;
 };
 
+// TODO: implement it as a generic function
 const getLists = async (email: string): Promise<List[]> => {
    try {
       const resp = await getDocs(

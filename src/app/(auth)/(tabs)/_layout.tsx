@@ -19,10 +19,13 @@ import {
   Feather,
   AntDesign 
 } from '@expo/vector-icons';
+import { useHeaderSearch } from '@/services/store/search';
 
 const { width } = Dimensions.get('window');
 
 export default function TabLayout() {
+  const setHeaderSearch = useHeaderSearch(state => state.setSearch);
+  
   return (
     <Tabs screenOptions={{
       tabBarShowLabel: false,
@@ -81,9 +84,13 @@ export default function TabLayout() {
               className='flex-1 rounded-md bg-gray-300'>
               <View className='flex-1 mx-3 flex-row items-center justify-between space-x-1'>
                 <TextInput
+                  autoComplete='off'
+                  autoCapitalize='none'
+                  autoCorrect={ false }
                   placeholder='Пошук'
                   placeholderTextColor='gray'
                   clearButtonMode='while-editing'
+                  onChangeText={ (text) => setHeaderSearch(text) }
                   className='flex-1 text-base text-gray-700 font-sans-r'
                 />
 
