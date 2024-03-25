@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useQueryClient } from 'react-query';
 
 import { 
@@ -78,6 +78,10 @@ export default function List() {
          <TouchableOpacity
             activeOpacity={ 0.6 }
             style={ styles.boxShadow }
+            onPress={ () => router.navigate({
+               pathname: '/(auth)/add_item',
+               params: { list_id: id }
+            }) }
             className='absolute bottom-10 right-5 w-16 h-16 items-center justify-center rounded-full bg-orange-400'>
             <AntDesign 
                name="plus" 

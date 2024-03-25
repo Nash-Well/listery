@@ -1,8 +1,10 @@
 import { Stack, useRouter } from "expo-router";
 
-import { Image, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+import { COLORS } from "@/constants";
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -65,6 +67,7 @@ export default function AuthLayout() {
                   options={{
                      title: '',
                      headerShown: true,
+                     headerStyle: { backgroundColor: COLORS.antiFlashWhite }
                   }}
                />
 

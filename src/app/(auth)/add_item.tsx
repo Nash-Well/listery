@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useQueryClient } from 'react-query';
 import { useLocalUser } from '@/services/store/user';
-import { useRouter, useNavigation } from 'expo-router';
+import { useQuery, useQueryClient } from 'react-query';
+import { useRouter, useNavigation, useLocalSearchParams } from 'expo-router';
 
 import { 
    View, 
@@ -34,6 +34,7 @@ import {
 } from '@expo/vector-icons';
 
 import { Wish, List } from '@/types';
+import { getWishByID } from '@/types/wish';
 
 import { UploadToStorage } from '@/services/utils/image';
 
@@ -43,6 +44,11 @@ import { addDoc, collection } from 'firebase/firestore';
 type UploadState = {
    show:  boolean;
    index: number;
+}
+
+type LocalParams = {
+   id?:        string;
+   list_id?:   string;
 }
 
 // TODO: refactor
@@ -69,20 +75,45 @@ export default function AddItem() {
       });
    }, [ navigation ]);
 
+   const { id, list_id }: LocalParams = useLocalSearchParams();
+   const { data } = useQuery({
+      queryKey: id,
+      queryFn:  () => getWishByID(+id!),
+      
+      enabled: !!id,
+      refetchOnWindowFocus: false,
+   });
+
    const [ wish, setWish ] = useState<Wish>({
-      id:            0,
-      name:          '',
-      list_id:       -1,
-      list_name:     '',
-      link:          '',
-      imgs:          ['', '', ''],
-      description:   '',
-      price:         0,
-      currency:      '₴',
-      hide:          false,
-      email:         localUser?.email!,
+      id:           0,
+      name:         '',
+      list_id:      +list_id! || -1,
+      list_name:    '',
+      link:         '',
+      imgs:         ['', '', ''],
+      description:  '',
+      price:        0,
+      currency:     '₴',
+      hide:         false,
+      email:        localUser?.email!,
    });
    const lists = client.getQueryData<List[]>("lists");
+
+   useEffect(() => {
+      if(lists) {
+         setWish(oldWish => ({
+            ...oldWish,
+            list_name: lists.find(list => list.id == wish.list_id)?.title!
+         }));
+      }
+   }, [ list_id ]);
+
+   useEffect(() => {
+      if(data) setWish({ 
+         ...data, 
+         imgs: data.imgs.length > 0 ? data.imgs : ['','',''] 
+      });
+   }, [ data ]);
 
    const [ upload, setUpload ] = useState<UploadState>({
       show:  false,
@@ -176,6 +207,7 @@ export default function AddItem() {
                
                <TextInput
                   autoComplete='off'
+                  value={ wish.name }
                   autoCapitalize='none'
                   autoCorrect={ false }
                   placeholder='Додати назву'
@@ -193,6 +225,7 @@ export default function AddItem() {
                
                <TextInput
                   autoComplete='url'
+                  value={ wish.link }
                   autoCapitalize='none'
                   autoCorrect={ false }
                   placeholder='Додати посилання'
@@ -215,7 +248,7 @@ export default function AddItem() {
                   <Text className='text-lg text-gray-400 font-sans-sm'>
                      {
                         wish.list_id !== -1 ? (
-                           lists?.find(list => list.id === wish.list_id)?.title || ''
+                           wish.list_name
                         ) : 'Обрати список'
                      }
                   </Text>
@@ -277,6 +310,7 @@ export default function AddItem() {
                   <TextInput
                      placeholder='0,00'
                      keyboardType='numeric'
+                     value={ wish.price.toString() }
                      className='text-lg text-gray-800 font-sans-r'
                      onChangeText={ (text) => updatedWish("price", +text) }
                   />
@@ -327,7 +361,10 @@ export default function AddItem() {
             onPress={ handleAddWish }
             className={ `absolute bottom-8 right-5 left-5 p-5 rounded-lg items-center bg-${ isAble() ? 'orange' : 'gray' }-400` }>
             <Text className='text-xl text-white font-sans-b'>
-               Додати бажання
+               {
+                  id ? 'Редагувати ' : 'Додати '
+               }
+               бажання
             </Text>
          </TouchableOpacity>
 

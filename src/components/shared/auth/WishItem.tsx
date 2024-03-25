@@ -1,5 +1,6 @@
 import { createRef, FC } from "react";
 import { useRouter } from "expo-router";
+import { useQueryClient } from "react-query";
 
 import { 
    View,
@@ -18,12 +19,23 @@ import { Feather } from "@expo/vector-icons";
 
 import { Wish } from "@/types";
 
+import { FIREBASE_DB } from "@/services/firebase";
+import { 
+   doc,
+   where, 
+   query, 
+   getDocs, 
+   deleteDoc, 
+   collection, 
+} from "firebase/firestore";
+
 type Props = {
    item: Wish;
 };
 
 const WishItem: FC<Props> = ({ item }) => {
    const router = useRouter();
+   const client = useQueryClient();
    const swipeRef = createRef<Swipeable>();
 
    const handleEditItem = () => {
@@ -33,8 +45,27 @@ const WishItem: FC<Props> = ({ item }) => {
    };
 
    const deleteItem = async () => {
+      try {
+         const qs = await getDocs(
+            query(
+               collection(FIREBASE_DB, "wishes"), 
+               where("id", "==", item.id)
+            )
+         );
+         
+         if (!qs.empty) {
+            await deleteDoc(
+               doc(FIREBASE_DB, "wishes", qs.docs[0].id)
+            );
+         }
 
-   }
+         client.setQueriesData("wishes", (oldWishes: Wish[] | undefined) => {
+            return (oldWishes ?? []).filter(i => i.id !== item.id);
+         });
+      } catch (err) {
+         throw err; // FIXME
+      }
+   };
 
    const handleDeleteItem = () => {
       swipeRef.current?.close();
@@ -65,7 +96,7 @@ const WishItem: FC<Props> = ({ item }) => {
             activeOpacity={ 1 }
             style={ styles.itemShadow }
             className="mb-5 flex-row items-center mx-5 rounded-lg bg-white"
-            onPress={ () => router.push({ pathname: '/(auth)/wish', params: { id: JSON.stringify(item.id) } }) }>
+            onPress={ () => router.push({ pathname: '/(auth)/wish', params: { id: item.id.toString() } }) }>
             <View className="relative">
                <Image
                   resizeMode="cover"
